@@ -1,30 +1,51 @@
-import React, { useEffect } from 'react';
+import React, { useEffect,useState } from 'react';
 import axios from "axios";
-import { View, Image, Text, StyleSheet, TextInput, Dimensions } from 'react-native';
+import { View, Image, Text, StyleSheet, TextInput, Dimensions,ScrollView } from 'react-native';
 import getImage from '../util/httpcalls';
-const url = "https://api.pexels.com/v1/search?query=nature&per_page=1"
+const url = "https://api.pexels.com/v1/search?query=nature&per_page=15"
 const API_Key = '12345'
 
 const PictureWithDescription = ({ description }) => {
+
+  const[pixelPhotoList,setpixelPhotoList] = useState([])
+  const[pixelUrl,setPixelUrl] = useState('')
 
   useEffect(() => {
     axios.get(url,{
       'headers': { 'Authorization': API_Key }
   }).then((response) => {
-      console.log('response', response)
+      console.log('response123', response?.data)
+     
+    let photosarr = response?.data?.photos.map(photoInfo => photoInfo.src)
+      // const url = new URL(response?.data?.photos[1].src?.large2x)
+      // console.log('response1234', url.toString())
+      setpixelPhotoList(photosarr)
     }
     )
   }, [])
 
+  useEffect(()=>{
+   if(pixelPhotoList.length!==0){
+  handleScroll()
+   }
+
+  },[pixelPhotoList])
+
+  const handleScroll = () =>{
+    let randomPhoto = pixelPhotoList[Math.floor(Math.random() * pixelPhotoList.length)];
+    setPixelUrl(randomPhoto.large2x)
+  }
+
 
   return (
     <View style={styles.container}>
-      <Image source={{ url: 'https://images.pexels.com/photos/4651215/pexels-photo-4651215.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940' }} style={styles.image} resizeMode="contain" />
+      <ScrollView horizontal pagingEnabled  onScroll={handleScroll}  scrollEventThrottle={5} >
+      <Image source={{uri:pixelUrl ?pixelUrl:null  }} style={[styles.image, { width: windowWidth }]}/>
+      </ScrollView>
       <Text style={styles.description}>{description}</Text>
       <TextInput
         placeholder="Type something..."
       />
-      {/* <Text>You typed: {text}</Text> */}
 
     </View>
   );
@@ -37,14 +58,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: 50, // Adjust this value to position the image lower or higher
+    justifyContent: 'flex-start',
+    // alignItems: 'center',
+    paddingTop: 10, // Adjust this value to position the image lower or higher
 
   },
   image: {
-    width: windowWidth, // Adjust width and height as needed
-    height: windowheight * 0.5,
+    resizeMode: 'cover', // Adjust width and height as needed
+    height: windowheight*0.5 ,
     // resizeMode: 'cover', // Or use other resizeMode options as needed
   },
 
