@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import PictureWithDescription from './src/bottom_navigation/PictureWithDescription'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 //import PictureWithDescription from './PictureWithDescription';
@@ -13,6 +14,7 @@ const Tab = createBottomTabNavigator();
 export default function App() {
 
   return (
+    <SafeAreaProvider>
    <NavigationContainer>
    <Tab.Navigator>
        <Tab.Screen name='write' component={PictureWithDescription}/>
@@ -20,6 +22,7 @@ export default function App() {
        <Tab.Screen name='Account' component={AccountScreen} /> 
    </Tab.Navigator>
    </NavigationContainer>
+   </SafeAreaProvider>
   );
 }
 
