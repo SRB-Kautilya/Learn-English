@@ -15,7 +15,7 @@ Idea in to Excution:
 
 1) As usual  login Page  
 
-![Alt text](./assetts/Login.PNG)
+![Alt text](./assets/Login.PNG)
 
 
 
