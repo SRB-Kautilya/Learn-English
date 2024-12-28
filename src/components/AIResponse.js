@@ -1,8 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import axios from "axios";
-import { View, Text, StyleSheet, Dimensions,TouchableOpacity, Linking} from 'react-native';
-import { Dialog, Portal, Provider, ActivityIndicator } from 'react-native-paper';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { View, Text, StyleSheet,TouchableOpacity, Linking} from 'react-native';
 //import Clipboard from '@react-native-clipboard/clipboard';
 import * as Clipboard from 'expo-clipboard';
 

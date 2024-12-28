@@ -1,14 +1,9 @@
 
 import React,{ useState, useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import PictureWithDescription from './src/bottom_navigation/PictureWithDescription'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-//import PictureWithDescription from './PictureWithDescription';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { FirstTab } from './src/components/FirstTab';
 import { HomeScreen } from './src/components/HomeScreen';
 import {SignIn} from './src/components/SignIn';
 import AsyncStorage from '@react-native-async-storage/async-storage';

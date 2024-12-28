@@ -1,22 +1,17 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from "axios";
-import { SafeAreaView, Image, Text, Platform, Button, StyleSheet, TextInput, Dimensions, ScrollView, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import getImage from '../util/httpcalls';
+import { SafeAreaView, Image,Platform, Button, StyleSheet, Dimensions, ScrollView, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { TypeComponent } from '../components/TypeComponent';
-import { AIResponse } from '../components/AIResponse';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { throttle } from 'lodash';
-import { Dialog, Portal, ActivityIndicator } from 'react-native-paper';
+
 import { useNavigation } from '@react-navigation/native';
 const data = require('../../data.json'); 
 
-
-//import { API_URL, API_KEY } from '@env';
-// import {API_KEY,API_URL} from 'react-native-dotenv';
 const API_URL = "https://api.pexels.com/v1/search?query=natu"
 const API_KEY = '456'
 
-//console.log('test',API_URL,API_KEY)
+
 
 const PictureWithDescription = ({ }) => {
   const navigation = useNavigation();
@@ -33,8 +28,6 @@ const PictureWithDescription = ({ }) => {
     
       let photosarr = response?.data?.photos.map(photoInfo => photoInfo.src)
      setpixelPhotoList(photosarr)
-    // setpixelPhotoList(data)
-      console.log('test---->',photosarr)
     }
     ).catch(()=> {
       setpixelPhotoList(data)
