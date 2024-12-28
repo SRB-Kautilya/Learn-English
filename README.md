@@ -4,9 +4,9 @@ npm install and npm start
 
 IDEA:
 
-# English can be learned in many ways, one of the way is describing the picture  or writing about that picture in 50 words and correcting it with a professional Teacher.
+ English can be learned in many ways, one of the way is describing the picture  or writing about that picture in 50 words and correcting it with a professional Teacher.
 
-# As AI is evolving, I taken chatgpt as the teacher so after you write 50 words , you can send the picture to AI and compare how AI returns it, based on it  you can learn english.
+ As AI is evolving, I taken chatgpt as the teacher so after you write 50 words , you can send the picture to AI and compare how AI returns it, based on it  you can learn english.
 
 
 Idea in to Excution:
