@@ -1,34 +1,63 @@
-import { StatusBar } from 'expo-status-bar';
-import * as React from 'react';
+
+import React,{ useState, useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import PictureWithDescription from './src/bottom_navigation/PictureWithDescription'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 //import PictureWithDescription from './PictureWithDescription';
-import DictionaryScreen from './src/bottom_navigation/DictionaryScreen';
-import AccountScreen from './src/bottom_navigation/AccountScreen';
+
 import { NavigationContainer } from '@react-navigation/native';
-//import BottomNavigation from './src/bottom_navigation/BottomNavigation';
-const Tab = createBottomTabNavigator();
+import { createStackNavigator } from '@react-navigation/stack';
+import { FirstTab } from './src/components/FirstTab';
+import { HomeScreen } from './src/components/HomeScreen';
+import {SignIn} from './src/components/SignIn';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
+const Stack = createStackNavigator();
 
 export default function App() {
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      try {
+        const userToken = await AsyncStorage.getItem('userToken');
+        if (userToken) {
+          setIsLoggedIn(true);
+        } else {
+          setIsLoggedIn(false);
+        }
+      } catch (error) {
+        console.error('Error checking login status:', error);
+      }
+    };
+
+    checkLoginStatus();
+  }, []);
+
+
   return (
-    <SafeAreaProvider>
-   <NavigationContainer>
-   <Tab.Navigator>
-       <Tab.Screen name='write' component={PictureWithDescription}/>
-      <Tab.Screen name='Dictionary' component={DictionaryScreen} />
-       <Tab.Screen name='Account' component={AccountScreen} /> 
-   </Tab.Navigator>
-   </NavigationContainer>
-   </SafeAreaProvider>
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {isLoggedIn ? (
+          <Stack.Screen name="Home" component={HomeScreen} />
+        ) : (
+          <>
+          <Stack.Screen name="SignIn" component={SignIn} />
+          <Stack.Screen name="Home" component={HomeScreen} />
+          </>
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
 const styles = StyleSheet.create({
- 
-container:{
-flexDirection:'column',
-}
+
+  container: {
+    flexDirection: 'column',
+  }
 });

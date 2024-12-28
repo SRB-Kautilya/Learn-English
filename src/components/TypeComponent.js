@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
-import { View,  StyleSheet, Text, Button } from 'react-native'
+import { View, StyleSheet, Text, Button } from 'react-native'
 import { TextInput } from 'react-native-paper';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
 export const TypeComponent = () => {
 
     const [text, setText] = useState('');
@@ -9,7 +11,7 @@ export const TypeComponent = () => {
     const startRecording = () => {
         // Logic to start recording
         setIsRecording(true);
-       // Alert.alert('Recording started');
+        // Alert.alert('Recording started');
     };
 
     const stopRecording = () => {
@@ -24,36 +26,47 @@ export const TypeComponent = () => {
     };
 
     return (
-        <View >
+
+        <View style={styles.container}>
             <TextInput
+                style={styles.input}
                 onChangeText={onChangeText}
                 value={text}
                 placeholder="Type your message here..."
                 editable={!isRecording} // Disable editing while recording
-                multiline={true}
+                multiline
+                underlineColor="transparent" // Remove the default underline
+                mode="outlined" // Optional: For a consistent border style
             />
-              <Button title={isRecording ? 'Stop Recording' : 'Start Recording'} onPress={isRecording ? stopRecording : startRecording} />
-
-            {/* <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <Button title={isRecording ? 'Stop Recording' : 'Start Recording'} onPress={isRecording ? stopRecording : startRecording} />
-                <Button title="Send" onPress={() => console.log('Sending message:', text)} />
-            </View> */}
         </View>
+
     )
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create({ 
     container: {
-        borderWidth: 1,
-        borderColor: '#000',
-        borderRadius: 10,
-        padding: 15,
-        backgroundColor: '#f0f0f0', // Background color of the message container
-        marginBottom: 10,
-        marginTop: 10,
+        borderWidth: 0,
+        borderColor: '#ccc',
+         borderRadius: 0,
+        backgroundColor: '#f9f9f9',
+        paddingTop:10
+        
     },
-    message: {
+    label: {
         fontSize: 16,
-        color: '#333', // Text color of the message
+        color: '#333',
+        marginBottom: 8,
+    },
+    input: {
+        fontSize: 16,
+        color: '#000',
+        backgroundColor: '#fff',
+        borderRadius: 60,
+        borderWidth: 0,
+        borderColor: '#ddd',
+        // padding: 1,
+        minHeight: 70,
+        textAlignVertical: 'top', // Ensures text starts at the top
+        // marginBottom: 1,
     },
 });

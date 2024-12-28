@@ -1,95 +1,134 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from "axios";
-import { SafeAreaView, Image, Text, StyleSheet, TextInput, Dimensions, ScrollView } from 'react-native';
+import { SafeAreaView, Image, Text, Platform, Button, StyleSheet, TextInput, Dimensions, ScrollView, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import getImage from '../util/httpcalls';
 import { TypeComponent } from '../components/TypeComponent';
+import { AIResponse } from '../components/AIResponse';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { throttle } from 'lodash';
+import { Dialog, Portal, ActivityIndicator } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
+const data = require('../../data.json'); 
+
+
 //import { API_URL, API_KEY } from '@env';
 // import {API_KEY,API_URL} from 'react-native-dotenv';
-const API_URL = "https://api.pexels.com/v1/search?query=nature&per_page=15"
-const API_KEY = 'QQAGFfpuC4sbZiUadQ13WHhDmk6bwct6LQId8CjNX4mtXVsoG2wStgGk'
+const API_URL = "https://api.pexels.com/v1/search?query=natu"
+const API_KEY = '456'
+
 //console.log('test',API_URL,API_KEY)
 
-const PictureWithDescription = ({ description }) => {
+const PictureWithDescription = ({ }) => {
+  const navigation = useNavigation();
 
   const [pixelPhotoList, setpixelPhotoList] = useState([])
   const [pixelUrl, setPixelUrl] = useState('')
   const lastOffset = useRef({ x: 0, y: 0 });
 
+
   useEffect(() => {
     axios.get(API_URL, {
       'headers': { 'Authorization': API_KEY }
     }).then((response) => {
+    
       let photosarr = response?.data?.photos.map(photoInfo => photoInfo.src)
-      setpixelPhotoList(photosarr)
+     setpixelPhotoList(photosarr)
+    // setpixelPhotoList(data)
+      console.log('test---->',photosarr)
     }
-    )
+    ).catch(()=> {
+      setpixelPhotoList(data)
+    })
   }, [])
 
   useEffect(() => {
     if (pixelPhotoList.length !== 0) {
       // handleScroll()
       let randomPhoto = pixelPhotoList[Math.floor(Math.random() * pixelPhotoList.length)];
+      console.log(randomPhoto.large2x)
       setPixelUrl(randomPhoto.large2x)
 
     }
 
   }, [pixelPhotoList])
 
-  const handleScroll = (event) => {
-    const { x, y } = event.nativeEvent.contentOffset;
-    const dx = x - lastOffset.current.x;
-    const dy = y - lastOffset.current.y;
-    console.log('qwertyu', dx, dy)
-    if (Math.abs(dx) > Math.abs(dy)) {
 
-      if (dx > 0) {
-        let randomPhoto = pixelPhotoList[Math.floor(Math.random() * pixelPhotoList.length)];
-        setPixelUrl(randomPhoto.large2x)
+
+
+  const sendtoAI = () =>{
+    navigation.navigate('Details')
+  }
+
+
+  const throttledHandleScroll = throttle(({ x, y }) => {
+
+    // const { x, y } = event?.nativeEvent?.contentOffset;
+    if (x !== undefined || y !== undefined) {
+      const dx = x - lastOffset?.current?.x;
+      const dy = y - lastOffset?.current?.y;
+      if (Math.abs(dx) > Math.abs(dy) && dx > 0) {
+        const randomPhoto = pixelPhotoList[Math.floor(Math.random() * pixelPhotoList.length)];
+        setPixelUrl(randomPhoto.large2x);
       }
+      lastOffset.current = { x, y };
     }
-    lastOffset.current = { x, y };
+  }, 300); // Adjust delay as needed
+
+
+  const handleScroll = (event) => {
+    const { x, y } = event.nativeEvent.contentOffset; // Extract values
+    throttledHandleScroll({ x, y });
   };
 
-
-
-
   return (
-    <SafeAreaView>
-      <ScrollView horizontal={false} onScroll={handleScroll} scrollEventThrottle={16} >
-        <ScrollView horizontal onScroll={handleScroll} showsHorizontalScrollIndicator={false} >
-          <Image source={{ uri: pixelUrl ? pixelUrl : null }} style={[styles.image, { width: windowWidth }]} />
+    <SafeAreaView style={styles.safeArea}>
+       <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+      <KeyboardAwareScrollView
+        extraScrollHeight={16}
+        enableOnAndroid={true}
+        keyboardShouldPersistTaps="handled"
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+         style={styles.scrollView} 
+        >
+        <ScrollView horizontal onScroll={handleScroll} showsHorizontalScrollIndicator={false}  style={styles.scrollView} >
+          <Image source={{ uri: pixelUrl || null }} style={[styles.image, { width: windowWidth }]} />
         </ScrollView>
-
-        <TypeComponent />
-      </ScrollView>
+    
+      <TypeComponent />
+     
+      <Button title="Send to ChatGPT" onPress={sendtoAI} />
+      </KeyboardAwareScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
-
   );
 };
 
 const windowWidth = Dimensions.get('window').width;
 const windowheight = Dimensions.get('window').height;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    // alignItems: 'center',
-    paddingTop: 10, // Adjust this value to position the image lower or higher
 
+const styles = StyleSheet.create({
+  safeArea: {
+    backgroundColor: 'white',
+    flex: 1,
+    margin: 0, 
+    padding: 0,
   },
   image: {
-    resizeMode: 'cover', // Adjust width and height as needed
-    height: windowheight * 0.7,
-    // resizeMode: 'cover', // Or use other resizeMode options as needed
+    height: 475, // Set the height as needed
+    resizeMode: 'cover',
+    marginBottom: 0,
+    padding: 0
   },
-
-  description: {
-    // textAlign: 'center',
-    fontSize: 16, // Adjust font size as needed
-    color: 'black', // Adjust color as needed
-    alignItems: 'center',
+  scrollView: {
+    // height: 450, 
+    flex: 1,  // Ensure the ScrollView takes up available space
+    marginBottom: 0, // Prevent extra space below the ScrollView
+    padding:0
   },
 });
 
