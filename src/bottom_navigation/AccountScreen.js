@@ -2,7 +2,8 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const LogoutButton = ({ navigation }) => {
+export const AccountScreen = ({ navigation }) => {
+  
   const handleLogout = async () => {
     try {
       // Clear AsyncStorage (removes all stored data)
@@ -61,4 +62,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LogoutButton;
+

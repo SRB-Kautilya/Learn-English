@@ -4,7 +4,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { FirstTab } from './FirstTab';
 import DictionaryScreen from '../bottom_navigation/DictionaryScreen';
-import AccountScreen from '../bottom_navigation/AccountScreen';
+import {AccountScreen} from '../bottom_navigation/AccountScreen';
 
 const Tab = createBottomTabNavigator();
 

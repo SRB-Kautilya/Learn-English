@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, StyleSheet,TouchableOpacity, Linking} from 'react-native';
 //import Clipboard from '@react-native-clipboard/clipboard';
 import * as Clipboard from 'expo-clipboard';
+import { ActivityIndicator } from 'react-native';
 
 export const AIResponse = () => {
 
